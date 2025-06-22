@@ -7,10 +7,19 @@ const validateInput = ({ target }) => {
         button.setAttribute('disabled', '');
 }
 
+const savePlayerWithExpiry = (playerName, expiryInMinutes) => {
+    const now = new Date();
+    const item = {
+        value: playerName,
+        expiry: now.getTime() + expiryInMinutes * 60 * 1000,
+    };
+    localStorage.setItem('player', JSON.stringify(item));
+};
+
 const handleSubmit = (event) => {
     event.preventDefault();
 
-    localStorage.setItem('player', input.value);
+     savePlayerWithExpiry(input.value, 10);
     window.location = './pages/game.html';
 }
 

@@ -28,6 +28,7 @@ const checkoEndGame = () => {
     if (disabledCards.length === 20) {
 
         clearInterval(this.loop);
+
         const finalTime = seconds;
 
         alert(`Parabéns, ${spanPlayer.innerHTML}! você venceu o jogo em ${finalTime} segundos.`)
@@ -118,9 +119,34 @@ const loadGame = () => {
     });
 }
 
+
+const getPlayerWithExpiry = () => {
+    const itemStr = localStorage.getItem('player');
+
+    if (!itemStr) return null;
+
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    if (now.getTime() > item.expiry) {
+        localStorage.removeItem('player');
+        return null;
+    }
+
+    return item.value;
+
+
+}
+
 window.onload = () => {
-    const playerName = localStorage.getItem('player');
+    const playerName = getPlayerWithExpiry();
     spanPlayer.innerHTML = playerName;
+
+    if (!playerName) {
+        alert('Sessão expirada! Você será redirecionado para escolher seu nome novamente.');
+        window.location = '../index.html';
+        return;
+    }
 
     const startModal = document.getElementById('startModal');
     const modalPlayerName = document.getElementById('modalPlayerName');
